@@ -57,3 +57,5 @@ interface IQuantumPortalMinerMembership {
         uint256 chainTimestamp
     ) external view returns (address);
 }
+
+// dev

@@ -15,9 +15,8 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 /**
  * @notice The quantum portal main contract for multi-chain dApps
  */
-abstract contract QuantumPortalNativeFeeRepo is
+contract QuantumPortalNativeFeeRepo is
     IQuantumPortalNativeFeeRepo,
-    IQuantumPortalPoc,
     IVersioned,
     WithAdmin
 {
@@ -26,6 +25,8 @@ abstract contract QuantumPortalNativeFeeRepo is
     address public weth;
     IQuantumPortalPoc portal;
     address public feeConvertor;
+
+    constructor() Ownable(msg.sender) {}
 
     function init(address _portal, address _feeConvertor) external onlyAdmin {
         portal = IQuantumPortalPoc(_portal);
@@ -56,3 +57,5 @@ abstract contract QuantumPortalNativeFeeRepo is
         IERC20(portal.feeToken()).safeTransfer(portal.feeTarget(), txGas);
     }
 }
+
+//dev

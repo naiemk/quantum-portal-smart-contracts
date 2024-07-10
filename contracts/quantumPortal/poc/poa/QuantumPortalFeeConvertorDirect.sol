@@ -9,7 +9,7 @@ import "hardhat/console.sol";
 /**
  * @notice Direct fee convertor for QP. The fee should be update by a trusted third party regularly
  */
-contract QuantumPortalFeeConverterDirect is
+contract QuantumPortalFeeConvertorDirect is
     IQuantumPortalFeeConvertor,
     WithAdmin
 {

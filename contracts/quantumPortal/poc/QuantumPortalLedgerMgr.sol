@@ -6,12 +6,13 @@ import "./poa/IQuantumPortalMinerMgr.sol";
 import "./poa/IQuantumPortalAuthorityMgr.sol";
 import "./poa/IQuantumPortalFeeConvertor.sol";
 import "./poa/IQuantumPortalMinerMembership.sol";
+import "./poa/IQuantumPortalWorkPoolClient.sol";
+import "./poa/IQuantumPortalWorkPoolServer.sol";
 import "./poa/stake/IQuantumPortalStakeWithDelegate.sol";
 import "foundry-contracts/contracts/common/IVersioned.sol";
 import "foundry-contracts/contracts/common/WithAdmin.sol";
 import "foundry-contracts/contracts/math/FullMath.sol";
 import "foundry-contracts/contracts/math/FixedPoint128.sol";
-import "./poa/QuantumPortalMinerMgr.sol";
 import "./QuantumPortalLib.sol";
 import "./PortalLedger.sol";
 

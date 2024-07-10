@@ -5,7 +5,7 @@ import "foundry-contracts/contracts/common/IVersioned.sol";
 import "./IQuantumPortalPoc.sol";
 import "./IQuantumPortalNativeFeeRepo.sol";
 import "./utils/IQpSelfManagedToken.sol";
-import "../../staking/library/TokenReceivable.sol";
+import "./poa/dummies/TokenReceivable.sol";
 import "./PortalLedger.sol";
 import "./QuantumPortalLib.sol";
 
