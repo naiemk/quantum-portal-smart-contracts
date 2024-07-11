@@ -68,4 +68,8 @@ contract DeployQp {
         ledger.transferOwnership(msg.sender);
         _gateway.transferOwnership(msg.sender);
     }
+
+    function realChainId() external view returns (uint256) {
+        return block.chainid;
+    }
 }

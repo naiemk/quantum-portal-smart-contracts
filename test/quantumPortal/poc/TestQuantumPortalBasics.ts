@@ -5,6 +5,7 @@ import { advanceTimeAndBlock } from "../../common/TimeTravel";
 import { deployAll, estimateGasUsingEthCall, PortalContext, QuantumPortalUtils } from "./QuantumPortalUtils";
 import { ethers } from 'hardhat';
 import { EstimateGasExample } from '../../../typechain-types/EstimateGasExample';
+import { QuantumPortalFeeConvertorDirect } from '../../../typechain-types/QuantumPortalFeeConvertorDirect';
 
 const _it = (a: any, b: any) => () => {};
 
@@ -29,7 +30,10 @@ describe("Test qp", function () {
             '0x'), 'QPWPS: Not enough fee');
 
         const feeTarget = await ctx.chain1.poc.feeTarget();
-        let feeAmount = await ctx.chain1.feeConverter.targetChainFixedFee(ctx.chain2.chainId, QuantumPortalUtils.FIXED_FEE_SIZE + 0 /* No method call*/)
+
+        const feeConvF = await ethers.getContractFactory('QuantumPortalFeeConvertorDirect');
+        const feeConv = feeConvF.attach(await ctx.chain1.ledgerMgr.feeConvertor()) as QuantumPortalFeeConvertorDirect;
+        let feeAmount = await feeConv.targetChainFixedFee(ctx.chain2.chainId, QuantumPortalUtils.FIXED_FEE_SIZE + 0 /* No method call*/)
         feeAmount = feeAmount.add(Wei.from('0.00001')); // plus some var fee
         await ctx.chain1.token.transfer(feeTarget, feeAmount);
         console.log(`Sent fee to ${feeTarget} - Worth ${feeAmount}. Now we can register the tx`);
