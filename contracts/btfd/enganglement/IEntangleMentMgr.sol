@@ -47,20 +47,20 @@ interface IEntanglementMgr {
     /**
      * @notice Requests the settlement. Called by user application
      */
-    function requestSettlement(toAddress bytes32, uint amount) external;
+    function requestSettlement(bytes32 toAddress, uint amount) external;
 
     /**
      * @notice Find the deterministic candidate for settlement. NOTE: Same as QPMinerMembership.findMiner
-     * @param settlementId 
-     * @param timestamp 
+     * @param settlementId  The settlement ID
+     * @param timestamp The timestamp of the block
      */
-    function findSettler(bytes32 settlementId, uint timestamp) view returns (address);
+    function findSettler(bytes32 settlementId, uint timestamp) external view returns (address);
 
     /**
      * @notice Selects a settler. To be used by other contracts. NOTE: Same as QPMinerMembership.selectMiner
-     * @param requestedMiner 
-     * @param blockHash 
-     * @param blockTimestamp 
+     * @param requestedSettler The requested settler
+     * @param settlementId The settlement ID
+     * @param timestamp The timestamp of the block
      */
     function selectSettler(
         address requestedSettler,
@@ -69,10 +69,10 @@ interface IEntanglementMgr {
     ) external returns (bool);
 
     struct SettlementInfo {
-        settlementId bytes32;
-        btcTransactionHash bytes32;
-        settler address;
-        complete bool;
+        bytes32 settlementId;
+        bytes32 btcTransactionHash;
+        address settler;
+        bool complete;
     }
 
     /**
@@ -85,7 +85,7 @@ interface IEntanglementMgr {
      * @notice Registered the execution of a transaction on the base chain. TO be called only as part of the mining
      * where the settlement TX on btc chain is mined. A settlement tx, has the settlement id as OP_RETURN
      */
-    function registerExecution(bytes32 settlementId, bytes32 btcTransactionHash, ) external;
+    function registerExecution(bytes32 settlementId, bytes32 btcTransactionHash) external;
 
     /***************************************************************/
     // Entanglement interface
@@ -94,10 +94,10 @@ interface IEntanglementMgr {
     /**
      * @notice Creates an entanglement multisig wallet, by calling the wentanglement pallette pre-compile
      */
-    function calculateEntanglementWallet(staker address) external pure returns (bytes32);
+    function calculateEntanglementWallet(address staker) external pure returns (bytes32);
 
     /**
      * @notice Note: Called by the MGR. Updates the capacity
      */
-    function updateCapacity(entangler bytes32, entangledBalance uint) external;
+    function updateCapacity(bytes32 entangler, uint entangledBalance) external;
 }
