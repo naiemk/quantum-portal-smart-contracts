@@ -21,7 +21,7 @@ function logLocalAccount(accounts: any) {
 
 let accounts: any = undefined;
 if (process.env.PAIVATE_KEY_SECRET_ARN) {
-  console.log('Getting secret from AWS Secret Manager');
+  console.log('Getting secret from AWS Secret Manager: ', process.env.PAIVATE_KEY_SECRET_ARN);
   let done = false;
   Secrets.fromAws().then((secret) => {
     console.log('Secret received...')
@@ -65,6 +65,12 @@ const config: HardhatUserConfig = {
     local: {
       // chainId: 97,
       url: 'http://127.0.0.1:8545',
+      accounts,
+      // gas: 1000000,
+      // gasPrice: 20000000000,
+    },
+    local_frm: {
+      url: 'http://127.0.0.1:9944',
       accounts,
       // gas: 1000000,
       // gasPrice: 20000000000,
@@ -156,7 +162,13 @@ const config: HardhatUserConfig = {
       accounts,
       allowUnlimitedContractSize: true,
       gas: 3000000, // this override is required for Substrate based evm chains
-    }
+    },
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts,
+      allowUnlimitedContractSize: true,
+    },
+
   },
   etherscan: {
     // Your API key for Etherscan

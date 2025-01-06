@@ -24,9 +24,12 @@ async function main() {
         signer5,
         signer6,
         signer7,
-        settings
+        settings;
     
-    ({ gateway, ledgerMgr, poc, authMgr, feeConverterDirect, staking, minerMgr, nativeFeeRepo } = await hre.ignition.deploy(deployModule))
+    console.log('Deploying QP');
+    ({ gateway, ledgerMgr, poc, authMgr, feeConverterDirect, staking, minerMgr, nativeFeeRepo } = await hre.ignition.deploy(
+        deployModule, { strategy: 'create2' }))
+    console.log('QP deploy inited');
 
     owner = (await hre.ethers.getSigners())[0]
     signer1 = (await hre.ethers.getSigners())[1]
@@ -70,10 +73,12 @@ async function main() {
         },
     ];
 
+    console.log({quorums})
     for (let i = 0; i < quorums.length; i++) {
         const quorum = quorums[i];
         await gateway.initializeQuorum(quorum.quorumId, 0, quorum.minSignatures, 0, quorum.addresses)
     }
+    console.log("Quorums initialized")
 
     conf.QuantumPortalGateway = gateway.target as string
     conf.QuantumPortalPoc = poc.target as string

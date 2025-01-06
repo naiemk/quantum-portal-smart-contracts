@@ -1,4 +1,4 @@
-import hre from "hardhat"
+import hre, { ethers } from "hardhat"
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules"
 import { ZeroAddress, FunctionFragment } from "ethers";
 import { loadConfig, loadQpDeployConfig, loadQpDeployConfigSync, QpDeployConfig } from "../../scripts/utils/DeployUtils";
@@ -10,10 +10,13 @@ const PROD_QUORUM_ID = "0x00000000000000000000000000000000000008AE"
 const TIMELOCKED_PROD_QUORUM_ID = "0x0000000000000000000000000000000000000d05"
 
 const deployModule = buildModule("DeployModule", (m) => {
-    
-    const currentChainId = 42161
+    const currentChainId = hre.network.config.chainId!;
+    if (!currentChainId) {
+        throw new Error("Chain ID not found. Configure it in hardhat.config.ts");
+    }
     const conf: QpDeployConfig = loadConfig(process.env.QP_CONFIG_FILE || DEFAULT_QP_CONFIG_FILE);
     const owner = m.getAccount(0)
+    const wfrm = conf.WFRM[currentChainId] || ZeroAddress;
 
     //--------------- Gateway ----------------//
     const gatewayImpl = m.contract("QuantumPortalGatewayUpgradeable", ["0x0000000000000000000000000000000000000000"], { id: "QPGatewayImpl"})
@@ -33,7 +36,7 @@ const deployModule = buildModule("DeployModule", (m) => {
     initializeCalldata = m.encodeFunctionCall(ledgerMgrImpl, "initialize", [
         owner,
         owner,
-        conf.QuantumPortalMinStake!,
+        conf.QuantumPortalMinStake! || 0,
     ]);
     const ledgerMgrProxy = m.contract("ERC1967Proxy", [ledgerMgrImpl, initializeCalldata], { id: "LedgerMgrProxy"})
     const ledgerMgr = m.contractAt("QuantumPortalLedgerMgrImplUpgradeable", ledgerMgrProxy, { id: "LedgerMgr"})
@@ -85,7 +88,7 @@ const deployModule = buildModule("DeployModule", (m) => {
     //--------------- StakeWithDelegate -------//
     const stakingImpl = m.contract("QuantumPortalStakeWithDelegateUpgradeable", [], { id: "StakingImpl"})
     initializeCalldata = m.encodeFunctionCall(stakingImpl, "initialize(address,address,address,address)", [
-        conf.FRM[currentChainId!],
+        conf.FRM[currentChainId!] || ZeroAddress,
         authMgr,
         ZeroAddress,
         owner
@@ -110,10 +113,10 @@ const deployModule = buildModule("DeployModule", (m) => {
 	m.call(ledgerMgr, "updateFeeConvertor", [feeConverterDirect])
 
     m.call(poc, "setManager", [ledgerMgr])
-	m.call(poc, "setFeeToken", [conf.FRM[currentChainId!]])
+	m.call(poc, "setFeeToken", [conf.FRM[currentChainId!] || ZeroAddress])
     m.call(poc, "setNativeFeeRepo", [nativeFeeRepo])
     
-	m.call(minerMgr, "updateBaseToken", [conf.FRM[currentChainId!]])
+	m.call(minerMgr, "updateBaseToken", [conf.FRM[currentChainId!] || ZeroAddress])
 	m.call(ledgerMgr, "updateLedger", [poc], { id: "UpdateLedgerOnLedgerMgr"})
     m.call(staking, "setAdmin", [gateway])
 
@@ -444,6 +447,7 @@ const configModule = buildModule("ConfigModule", (m) => {
         nativeFeeRepo
     } = m.useModule(deployModule)
 
+    console.log("Updating fee target")
     m.call(poc, "updateFeeTarget")
     m.call(gateway, "updateQpAddresses", [poc, ledgerMgr, staking])
 
