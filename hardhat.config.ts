@@ -6,8 +6,11 @@ import "@nomicfoundation/hardhat-verify";
 import { Secrets } from "foundry-contracts/dist/test/common/Secrets";
 import deasync from 'deasync';
 import { TEST_MNEMONICS } from "./test/common/TestAccounts";
+import "hardhat-tracer";
+
 import { ethers } from "ethers";
 require("dotenv").config({path: __dirname + '/localConfig/.env'});
+console.log(__dirname + '/localConfig/.env');
 
 function logLocalAccount(accounts: any) {
   if (accounts?.mnemonic) {
@@ -63,7 +66,7 @@ const config: HardhatUserConfig = {
       accounts: accounts.constructor.name == "Array" ? { privateKey: accounts[0], balance: ethers.parseEther("1000").toString() } : accounts,
     },
     local: {
-      // chainId: 97,
+      chainId: 31337,
       url: 'http://127.0.0.1:8545',
       accounts,
       // gas: 1000000,
@@ -150,7 +153,7 @@ const config: HardhatUserConfig = {
       accounts,
     },
     ferrum_testnet: {
-      chainId: 26100,
+      chainId: 26026,
       url: "https://testnet.dev.svcs.ferrumnetwork.io",
       accounts,
       allowUnlimitedContractSize: true,
@@ -161,12 +164,14 @@ const config: HardhatUserConfig = {
       url: "https://qpn.svcs.ferrumnetwork.io/",
       accounts,
       allowUnlimitedContractSize: true,
-      gas: 3000000, // this override is required for Substrate based evm chains
+      gas: 1000000, // this override is required for Substrate based evm chains
     },
     sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      chainId: 11155111,
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
       accounts,
-      allowUnlimitedContractSize: true,
+      gas: 30000000, // this override is required for Substrate based evm chains
+      gasPrice: 10000000000,
     },
 
   },
@@ -191,20 +196,20 @@ const config: HardhatUserConfig = {
         browserURL: "https://ghostnet.dev.svcs.ferrumnetwork.io/"
       }
     },
-    {
-      network: "ferrum_testnet",
-      chainId: 26100,
-      urls: {
-        apiURL: "https://testnet-explorer.svcs.ferrumnetwork.io/api",
-        browserURL: "http://https://testnet-explorer.svcs.ferrumnetwork.io"
-      }
-    },
+    // {
+    //   network: "ferrum_testnet",
+    //   chainId: 26100,
+    //   urls: {
+    //     apiURL: "https://testnet-explorer.svcs.ferrumnetwork.io/api",
+    //     browserURL: "http://https://testnet-explorer.svcs.ferrumnetwork.io"
+    //   }
+    // },
     {
       network: "ferrum_mainnet",
       chainId: 26100,
       urls: {
-        apiURL: "https://explorer.svcs.ferrumnetwork.io/api",
-        browserURL: "http://explorer.svcs.ferrumnetwork.io/"
+        apiURL: "https://explorer.ferrumnetwork.io/api",
+        browserURL: "http://explorer.ferrumnetwork.io/"
       }
     }
   ]
@@ -213,15 +218,15 @@ const config: HardhatUserConfig = {
     // Disabled by default
     // Doesn't need an API key
     enabled: true,
-    apiUrl: "https://sourcify.dev/server",
-    browserUrl: "https://repo.sourcify.dev",
+    // apiUrl: "https://sourcify.dev/server",
+    // browserUrl: "https://repo.sourcify.dev",
   },
   ignition: {
     strategyConfig: {
       create2: {
         // To learn more about salts, see the CreateX documentation
-        salt: "0x0000000000000000000000000000000000001000000000000000000000000001"
-        // salt: "0x46657272756d4e6574776f726b2d6d61696e6e65743a30312e3030312e303031", // FerrumNetwork-mainnet:01.001.001
+        // salt: "0x0000000000000000000000000000000000001000000000000000000000000002"
+        salt: "0x46657272756D4E6574776F726B2D6D61696E6E65743A30312E3030312E303032", // FerrumNetwork-mainnet:01.001.002
       },
     },
   },

@@ -28,7 +28,7 @@ async function main() {
     
     console.log('Deploying QP');
     ({ gateway, ledgerMgr, poc, authMgr, feeConverterDirect, staking, minerMgr, nativeFeeRepo } = await hre.ignition.deploy(
-        deployModule, { strategy: 'create2' }))
+        deployModule, { strategy: 'create2', displayUi: true }))
     console.log('QP deploy inited');
 
     owner = (await hre.ethers.getSigners())[0]
@@ -44,41 +44,41 @@ async function main() {
     const PROD_QUORUM_ID = "0x00000000000000000000000000000000000008AE"
     const TIMELOCKED_PROD_QUORUM_ID = "0x0000000000000000000000000000000000000d05"
 
-    const quorums = [
-        {
-            quorumId: BETA_QUORUM_ID,
-            minSignatures: 2,
-            addresses: [
-                owner.address,
-                signer1.address,
-            ]
-        },
-        {   
-            quorumId: PROD_QUORUM_ID,
-            minSignatures: 2,
-            addresses: [
-                signer2.address,
-                signer3.address,
-                signer4.address,
-            ]
-        },
-        {   
-            quorumId: TIMELOCKED_PROD_QUORUM_ID,
-            minSignatures: 2,
-            addresses: [
-                signer5.address,
-                signer6.address,
-                signer7.address
-            ]
-        },
-    ];
+    // const quorums = [
+    //     {
+    //         quorumId: BETA_QUORUM_ID,
+    //         minSignatures: 2,
+    //         addresses: [
+    //             owner.address,
+    //             signer1.address,
+    //         ]
+    //     },
+    //     {   
+    //         quorumId: PROD_QUORUM_ID,
+    //         minSignatures: 2,
+    //         addresses: [
+    //             signer2.address,
+    //             signer3.address,
+    //             signer4.address,
+    //         ]
+    //     },
+    //     {   
+    //         quorumId: TIMELOCKED_PROD_QUORUM_ID,
+    //         minSignatures: 2,
+    //         addresses: [
+    //             signer5.address,
+    //             signer6.address,
+    //             signer7.address
+    //         ]
+    //     },
+    // ];
 
-    console.log({quorums})
-    for (let i = 0; i < quorums.length; i++) {
-        const quorum = quorums[i];
-        await gateway.initializeQuorum(quorum.quorumId, 0, quorum.minSignatures, 0, quorum.addresses)
-    }
-    console.log("Quorums initialized")
+    // console.log({quorums})
+    // for (let i = 0; i < quorums.length; i++) {
+    //     const quorum = quorums[i];
+    //     await gateway.initializeQuorum(quorum.quorumId, 0, quorum.minSignatures, 0, quorum.addresses)
+    // }
+    // console.log("Quorums initialized")
 
     conf.QuantumPortalGateway = gateway.target as string
     conf.QuantumPortalPoc = poc.target as string

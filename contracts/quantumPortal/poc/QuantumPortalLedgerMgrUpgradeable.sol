@@ -39,6 +39,7 @@ contract QuantumPortalLedgerMgrUpgradeable is Initializable, UUPSUpgradeable, Wi
         address minerMgr;
         address authorityMgr;
         address feeConvertor;
+        // TODO: remove. Not used
         address varFeeTarget;
         address fixedFeeTarget;
         PortalLedgerUpgradeable ledger;
@@ -1071,7 +1072,7 @@ contract QuantumPortalLedgerMgrUpgradeable is Initializable, UUPSUpgradeable, Wi
                 (uint256 minedWork, uint256 varWork) = executeBlock(bkey);
                 totalMinedWork += minedWork;
                 totalVarWork += varWork;
-                emit FinalizedBlock(remoteChainId, toNonce, block.timestamp);
+                emit FinalizedBlock(remoteChainId, i, block.timestamp);
             }
         }
 
@@ -1138,7 +1139,7 @@ contract QuantumPortalLedgerMgrUpgradeable is Initializable, UUPSUpgradeable, Wi
         setMinedBlockAsInvalid(key);
         IQuantumPortalLedgerMgr.MinedBlock memory b = getMinedBlock(key);
         PortalLedgerUpgradeable qp = PortalLedgerUpgradeable($.ledger);
-        uint256 gasPrice = IQuantumPortalFeeConvertor($.feeConvertor)
+        uint256 gasPrice = IQuantumPortalFeeConvertor($.feeConvertor) // TODO: remove
             .localChainGasTokenPrice();
         QuantumPortalLib.RemoteTransaction[] memory transactions = getMinedBlockTransactions(key);
         for (uint i = 0; i < transactions.length; i++) {
