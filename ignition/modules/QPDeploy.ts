@@ -73,6 +73,7 @@ const deployModule = buildModule("DeployModule", (m) => {
 
     //--------------- FeeConverterDirect ------------//
     const feeConverterDirectImpl = m.contract("QuantumPortalFeeConverterDirectUpgradeable", [], { id: "FeeConverterDirectImpl"})
+    // const feeConverterDirectImpl = m.contractAt("QuantumPortalFeeConverterDirectUpgradeable", "0x207EfA6D5B53337a55573449A8B60Dd32062fd3A", { id: "FeeConverterDirectImpl_at"})
     initializeCalldata = m.encodeFunctionCall(feeConverterDirectImpl, "initialize", [
         owner
     ]);
@@ -94,7 +95,7 @@ const deployModule = buildModule("DeployModule", (m) => {
 
     //--------------- StakeWithDelegate -------//
     const stakingImpl = m.contract("QuantumPortalStakeWithDelegateUpgradeable", [], { id: "StakingImpl"})
-    initializeCalldata = m.encodeFunctionCall(stakingImpl, "initialize(address,address,address,address)", [
+    initializeCalldata = m.encodeFunctionCall(stakingImpl, "initialize(address,address,address)", [
         authMgr,
         ZeroAddress,
         owner

@@ -39,9 +39,8 @@ contract QuantumPortalLedgerMgrUpgradeable is Initializable, UUPSUpgradeable, Wi
         address minerMgr;
         address authorityMgr;
         address feeConvertor;
-        // TODO: remove. Not used
-        address varFeeTarget;
-        address fixedFeeTarget;
+        address varFeeTarget; // REMOVED. Just keep the space
+        address fixedFeeTarget; // REMOVED. Just keep the space
         PortalLedgerUpgradeable ledger;
         mapping(uint256 => IQuantumPortalLedgerMgr.LocalBlock) localBlocks;
         mapping(uint256 => QuantumPortalLib.RemoteTransaction[]) localBlockTransactions;
@@ -391,19 +390,19 @@ contract QuantumPortalLedgerMgrUpgradeable is Initializable, UUPSUpgradeable, Wi
         $.feeConvertor = _feeConvertor;
     }
 
-    /**
-     * @notice Restricted: Updates the fee target
-     * @param _varFeeTarget The variable fee target
-     * @param _fixedFeeTarget The fixed fee target
-     */
-    function updateFeeTargets(
-        address _varFeeTarget,
-        address _fixedFeeTarget
-    ) external onlyAdmin {
-        QuantumPortalLedgerMgrStorageV001 storage $ = _getQuantumPortalLedgerMgrStorageV001();
-        $.varFeeTarget = _varFeeTarget;
-        $.fixedFeeTarget = _fixedFeeTarget;
-    }
+    // /**
+    //  * @notice Restricted: Updates the fee target
+    //  * @param _varFeeTarget The variable fee target
+    //  * @param _fixedFeeTarget The fixed fee target
+    //  */
+    // function updateFeeTargets(
+    //     address _varFeeTarget,
+    //     address _fixedFeeTarget
+    // ) external onlyAdmin {
+    //     QuantumPortalLedgerMgrStorageV001 storage $ = _getQuantumPortalLedgerMgrStorageV001();
+    //     $.varFeeTarget = _varFeeTarget;
+    //     $.fixedFeeTarget = _fixedFeeTarget;
+    // }
 
     /**
      * @notice Restricted: Update the miner minimum stake
@@ -1283,13 +1282,13 @@ contract QuantumPortalLedgerMgrUpgradeable is Initializable, UUPSUpgradeable, Wi
         return _getQuantumPortalLedgerMgrStorageV001().feeConvertor;
     }
 
-    function varFeeTarget() public view returns (address) {
-        return _getQuantumPortalLedgerMgrStorageV001().varFeeTarget;
-    }
+    // function varFeeTarget() public view returns (address) {
+    //     return _getQuantumPortalLedgerMgrStorageV001().varFeeTarget;
+    // }
 
-    function fixedFeeTarget() public view returns (address) {
-        return _getQuantumPortalLedgerMgrStorageV001().fixedFeeTarget;
-    }
+    // function fixedFeeTarget() public view returns (address) {
+    //     return _getQuantumPortalLedgerMgrStorageV001().fixedFeeTarget;
+    // }
 }
 
 contract QuantumPortalLedgerMgrImplUpgradeable is QuantumPortalLedgerMgrUpgradeable {

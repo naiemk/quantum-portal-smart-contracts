@@ -348,7 +348,7 @@ contract QuantumPortalStakeWithDelegateUpgradeable is
         if (currentDelegate == address(0)) {
             $.delegations[delegator] = delegate;
         } else {
-            require(currentDelegate == delegate, "QPS:re-del not allowed");
+            require(currentDelegate == delegate, "QPS:re-deleg not allowed");
         }
     }
 
